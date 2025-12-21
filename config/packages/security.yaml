@@ -1,0 +1,50 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        auth_module_provider:
+            id: Auth\Infra\User\Service\Security\UserProvider
+
+    firewalls:
+        login:
+            pattern: ^/api/auth/login
+            stateless: true
+            json_login:
+                check_path: api_login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern: ^/api
+            stateless: true
+            user_checker: Auth\Infra\User\Service\Security\UserChecker
+            jwt: ~
+            refresh_jwt:
+                check_path: api_refresh_token
+                provider: auth_module_provider
+            entry_point: jwt
+
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    access_control:
+        # PUBLIC ACCESS
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/v1/service/ping, roles: PUBLIC_ACCESS }
+        # Module auth
+        - { path: ^/api/auth/v1/user/(sign-up|confirm-email), roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/v1/user/request-reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/v1/user/confirm-reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
+        # Module blog
+        - { path: ^/api/blog/v1/post, methods: GET, roles: PUBLIC_ACCESS }
+
+        # То что не PUBLIC_ACCESS, то ROLE_USER.
+        # ROLE_ADMIN - прописываем в Action
+        - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/, roles: ROLE_USER }

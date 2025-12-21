@@ -1,0 +1,107 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: API интернет магазин защиты растений
+            description: Документация к API интернет магазина защиты растений
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+            parameters:
+                offsetParam:
+                    name: 'offset'
+                    in: 'query'
+                    required: true
+                    schema:
+                        type: integer
+                        format: int32
+                        minimum: 0
+                        default: 0
+                limitParam:
+                    name: 'limit'
+                    in: 'query'
+                    required: true
+                    schema:
+                        type: integer
+                        format: int32
+                        minimum: 1
+                        maximum: 100
+                        default: 100
+        security:
+            -   Bearer: [ ]
+
+        paths:
+            /api/doc.json:
+                get:
+                    summary: Документация в формате JSON.
+                    tags: [ Документация ]
+                    requestBody:
+                        content:
+                            application/json:
+
+            /api/auth/login-check:
+                post:
+                    summary: Аутентификация пользователя.
+                    tags: [ Регистрация ]
+                    requestBody:
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        username:
+                                            type: string
+                                            example: 'admin@test.ru'
+                                            description: Логин пользователя.
+                                        password:
+                                            type: string
+                                            example: 'secret'
+                                            description: Пароль.
+                    responses:
+                        '200':
+                            description: Токен пользователя успешно создан.
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                                description: JWT токен пользователя.
+                                            refreshToken:
+                                                type: string
+                                                description: JWT токен для обновления.
+
+            /api/auth/token-refresh:
+                post:
+                    summary: Обновление токена пользователя.
+                    tags: [ Регистрация ]
+                    requestBody:
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        refreshToken:
+                                            type: string
+                                            description: Токен для обновления.
+                    responses:
+                        '200':
+                            description: Токен пользователя успешно обновлен.
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                                                description: JWT токен пользователя.
+                                            refreshToken:
+                                                type: string
+                                                description: JWT токен для обновления.
+
+    areas:
+        path_patterns:
+            - ^/api(?!/doc$)

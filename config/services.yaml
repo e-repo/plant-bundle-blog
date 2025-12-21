@@ -1,0 +1,106 @@
+parameters:
+    app.email: '%env(APP_EMAIL)%'
+    app.timezone: 'Europe/Moscow'
+
+
+    # Ссылка для сброса пароля ведет к инициатору (источнику) этого действия
+    # URI для подтверждения сброса пароля соответствует следующему шаблону:
+    # https://{domain}/confirm-reset-password?token={token} (reset-password.html.twig)
+    #
+    # AUTH REGISTRATION SOURCES
+    app.registration_sources: {
+        blog: '%env(BLOG_REG_SOURCE)%',
+        shop: '%env(SHOP_REG_SOURCE)%',
+        admin_panel: '%env(ADMIN_PANEL_REG_SOURCE)%',
+    }
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            bool $isDebug: '%kernel.debug%'
+            string $appEmail: '%app.email%'
+            string $timezone: '%app.timezone%'
+            array $registrationSources: '%app.registration_sources%'
+
+    _instanceof:
+        CoreKit\Application\Bus\CommandHandlerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+
+        CoreKit\Application\Bus\QueryHandlerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: query.bus }
+
+        CoreKit\Application\Bus\EventListenerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: event.bus }
+
+    # Modules
+    Auth\:
+        resource: '../src/Auth'
+        exclude:
+            - '../src/Auth/{Kernel.php,*Dto.php}'
+            - '../src/Auth/{Entity,Enum,Event}'
+
+    Blog\:
+        resource: '../src/Blog'
+        exclude:
+            - '../src/Blog/{Kernel.php,*Dto.php}'
+            - '../src/Blog/{Entity,Enum,Event}'
+
+    Service\:
+        resource: '../src/Service'
+        exclude:
+            - '../src/Auth/{Kernel.php,*Dto.php}'
+            - '../src/Auth/{Entity,Enum,Event}'
+            - '../src/CoreKit/UI/**/{*Command.php,*Query.php,*Response.php,*Request.php}'
+
+    CoreKit\:
+        resource: '../src/CoreKit'
+        exclude:
+            - '../src/CoreKit/{Kernel.php,*Dto.php}'
+            - '../src/CoreKit/{Entity,Enum,Event}'
+
+    # Subscriber and Listeners
+    CoreKit\UI\Http\Listener\ExceptionListener:
+        tags: [ { name: 'kernel.event_listener', event: kernel.exception, priority: 10 } ]
+
+    CoreKit\UI\Http\Listener\ResponseListener:
+        tags: [ { name: 'kernel.event_listener' } ]
+
+    CoreKit\Application\Listener\ORMEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+
+    acme_api.event.jwt_created_listener:
+        class: Auth\Application\User\Listener\JWTCreatedListener
+        arguments: [ '@request_stack' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+    # Another services
+    CoreKit\UI\Http\Exception\Resolver:
+        arguments: [ '%exceptions%' ]
+
+    Service\Application\Menu\Query\GetMenu\Handler:
+        arguments:
+            $menuList: '%menu_list%'
+
+    CoreKit\UI\Http\Request\RequestArgumentResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 150 }
+
+    CoreKit\Infra\FixPostgreSQLDefaultSchemaListener:
+        tags:
+            - { name: doctrine.event_listener, event: postGenerateSchema }
+
+    Blog\Application\Post\Post\Listener\MainImageThumbnailCreateListener:
+        arguments:
+            $thumbnails: '%thumbnails%'
+
+    # S3
+    CoreKit\Infra\FileStorage\S3StorageClient:
+        arguments:
+            $s3FileSystem: '@oneup_flysystem.s3_filesystem_filesystem'

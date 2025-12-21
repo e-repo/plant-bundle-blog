@@ -1,0 +1,9 @@
+parameters:
+    # icon - https://pictogrammers.com/library/mdi/
+    menu_list:
+        service:
+            - { id: 'service_home', title: 'Главная', icon: 'home-silo-outline' }
+            - { id: 'service_users', title: 'Пользователи', icon: 'account-group-outline' }
+        blog:
+            - { id: 'blog_posts', title: 'Статьи', icon: 'post-outline' }
+            - { id: 'blog_categories', title: 'Категории', icon: 'shape-outline' }

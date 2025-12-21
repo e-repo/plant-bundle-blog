@@ -1,0 +1,17 @@
+service_controllers:
+    resource: ../src/Service/UI/Http
+    type: annotation
+
+auth_controllers:
+    resource: ../src/Blog/UI/Http
+    type: annotation
+
+blog_controllers:
+    resource: ../src/Auth/UI/Http
+    type: annotation
+
+api_login_check:
+    path: /api/auth/login-check
+
+api_refresh_token:
+    path: /api/auth/token-refresh
