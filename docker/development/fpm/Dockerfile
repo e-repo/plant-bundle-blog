@@ -1,7 +1,7 @@
 FROM php:8.2-fpm-alpine
 
 RUN apk add --no-cache autoconf build-base linux-headers imagemagick-dev \
-    && pecl install xdebug-3.2.1 imagick \
+    && pecl install xdebug-3.4.7 imagick \
     && docker-php-ext-enable xdebug imagick
 
 RUN apk add --no-cache postgresql-dev \

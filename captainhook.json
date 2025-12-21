@@ -1,7 +1,7 @@
 {
     "config": {
         "verbosity": "verbose",
-        "git-directory": "./../.git"
+        "git-directory": ".git"
     },
     "run": {
         "git": "/app/.git"
@@ -10,10 +10,10 @@
         "enabled": true,
         "actions": [
             {
-                "action": "vendor/bin/ecs check --fix -q -n {$STAGED_FILES|replace:backend/|with:|of-type:php}"
+                "action": "vendor/bin/ecs check --fix -q -n {$STAGED_FILES|of-type:php}"
             },
             {
-                "action": "cd ../ && git add {$STAGED_FILES|of-type:php}"
+                "action": "git add {$STAGED_FILES|of-type:php}"
             },
             {
                 "action": "\\CaptainHook\\App\\Hook\\Composer\\Action\\CheckLockFile",
