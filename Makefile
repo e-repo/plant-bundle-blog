@@ -30,8 +30,7 @@ b-shell:
 
 
 be-docker-up:
-	#docker compose up -d -- $(TRAEFIK) $(BE-POSTGRES) $(BE-MINIO) $(BE-FPM) $(BE-CLI) $(BE-NGINX) $(BE-MAILER)
-	docker compose up -d -- $(BE-POSTGRES) $(BE-FPM) $(BE-NGINX) $(BE-MAILER)
+	docker compose up -d -- $(BE-POSTGRES) $(BE-MINIO) $(BE-CLI) $(BE-FPM) $(BE-NGINX) $(BE-MAILER)
 
 admin-docker-up:
 	docker compose up -d -- $(TRAEFIK) $(ADMIN_NGINX) $(ADMIN_NODE)

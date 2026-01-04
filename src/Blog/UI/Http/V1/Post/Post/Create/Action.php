@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
                 properties: [
                     new OA\Property(
                         property: 'file',
-                        description: 'Файл инструкции',
+                        description: 'Изображение поста',
                         type: 'file',
                     ),
                     new OA\Property(

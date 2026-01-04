@@ -47,7 +47,7 @@ class BasePostFixture extends Fixture implements ReferencableInterface
                         type: ImageType::from($item['imageType']),
                         file: new SplFileInfo($item['file'])
                     ),
-                    createdAt: isset($item['created_at'])
+                    createdAt: isset($item['createdАt'])
                         ? CarbonImmutable::parse($item['createdAt'])->toDateTimeImmutable()
                         : new DateTimeImmutable(),
                     id: $item['id'],

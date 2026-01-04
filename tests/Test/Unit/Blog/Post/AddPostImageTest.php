@@ -18,6 +18,7 @@ use Blog\Domain\Post\Entity\Specification\Post\UniqueShortTitle;
 use Blog\Domain\Post\Entity\Specification\Post\UniqueTitle;
 use Blog\Domain\Post\Entity\Status;
 use CoreKit\Domain\Entity\Id;
+use DateTimeImmutable;
 use DomainException;
 use Ramsey\Uuid\Uuid;
 use SplFileInfo;
@@ -81,6 +82,7 @@ final class AddPostImageTest extends KernelTestCase
                 type: ImageType::MAIN,
                 file: new SplFileInfo($uploadFilePath)
             ),
+            createdAt: new DateTimeImmutable(),
             id: $postId,
         );
 
@@ -99,7 +101,7 @@ final class AddPostImageTest extends KernelTestCase
         self::assertEquals($postDto->slug, $post->getSlug());
         self::assertEquals($postDto->title, $post->getTitle());
         self::assertEquals($postDto->shortTitle, $post->getShortTitle());
-        self::assertEquals($postDto->content, $post->getContent());
+        self::assertEquals($postDto->content->text, $post->getContent());
         self::assertEquals($postDto->status, $post->getStatus());
 
         $postCreatedEvents = array_filter(
@@ -149,6 +151,7 @@ final class AddPostImageTest extends KernelTestCase
                 type: ImageType::MAIN,
                 file: new SplFileInfo($uploadFilePath)
             ),
+            createdAt: new DateTimeImmutable(),
             id: $postId,
         );
 
@@ -177,7 +180,7 @@ final class AddPostImageTest extends KernelTestCase
         // assert
         self::assertNotNull($exceptionMessage);
         self::assertMatchesRegularExpression(
-            "/Изображение c типом '.+?' у поста '.+?' уже существует\./",
+            "/Данное изображение уже было добавлено, fileKey - '.+?'\./",
             $exceptionMessage
         );
         self::assertCount(1, $post->getImages());
@@ -203,6 +206,7 @@ final class AddPostImageTest extends KernelTestCase
                 type: ImageType::MAIN,
                 file: new SplFileInfo($uploadFilePath)
             ),
+            createdAt: new DateTimeImmutable(),
             id: $postId,
         );
 
