@@ -1,6 +1,9 @@
 FROM php:8.2-cli-alpine
 
-RUN apk add --no-cache autoconf build-base linux-headers imagemagick-dev \
+RUN apk add --no-cache autoconf build-base linux-headers \
+    imagemagick imagemagick-dev \
+    libjpeg-turbo libjpeg-turbo-dev \
+    libpng libpng-dev \
     && pecl install xdebug-3.4.7 imagick \
     && docker-php-ext-enable xdebug imagick
 

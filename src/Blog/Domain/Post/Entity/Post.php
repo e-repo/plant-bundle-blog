@@ -283,7 +283,7 @@ class Post implements HasEventsInterface
             postId: $this->getId(),
             type: $imageDto->type,
             fileKey: $imageDto->fileKey->value,
-            extension: $imageDto->file->getExtension(),
+            extension: $imageDto->extension,
             originalFileName: $imageDto->originalFileName,
         );
     }

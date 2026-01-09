@@ -111,6 +111,7 @@ final readonly class Handler implements CommandHandlerInterface
             fileKey: $fileKey,
             type: ImageType::MAIN,
             file: $file->getFileInfo(),
+            extension: $file->guessExtension(),
             createdAt: new DateTimeImmutable(),
         );
     }

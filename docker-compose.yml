@@ -27,6 +27,7 @@ services:
             - ./:/app
         depends_on:
             - postgres
+            - minio
         secrets:
             - s3_access_key
             - s3_secret_key

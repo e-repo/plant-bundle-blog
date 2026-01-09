@@ -86,9 +86,12 @@ final readonly class StorageService
             prefix: sprintf('%s_', $location->type)
         );
 
-        file_put_contents($file, $stream);
+        $fileWithExtension = $file . '.' . $location->extension;
+        rename($file, $fileWithExtension);
 
-        return new SplFileInfo($file);
+        file_put_contents($fileWithExtension, $stream);
+
+        return new SplFileInfo($fileWithExtension);
     }
 
     /**
