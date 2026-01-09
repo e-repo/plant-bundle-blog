@@ -104,3 +104,5 @@ services:
     CoreKit\Infra\FileStorage\S3StorageClient:
         arguments:
             $s3FileSystem: '@oneup_flysystem.s3_filesystem_filesystem'
+            $bucket: '%env(S3_BUCKET)%'
+            $publicUrl: '%env(S3_PUBLIC_URL)%'

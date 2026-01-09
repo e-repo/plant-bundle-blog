@@ -12,7 +12,9 @@ use League\Flysystem\FilesystemOperator;
 readonly class S3StorageClient implements StorageClientInterface
 {
     public function __construct(
-        private FilesystemOperator $s3FileSystem
+        private FilesystemOperator $s3FileSystem,
+        private string $bucket,
+        private string $publicUrl
     ) {}
 
     /**
@@ -48,7 +50,7 @@ readonly class S3StorageClient implements StorageClientInterface
 
     public function publicUrl(string $location, array $config = []): string
     {
-        return $this->s3FileSystem->publicUrl($location, $config);
+        return sprintf('%s/%s/%s', $this->publicUrl, $this->bucket, $location);
     }
 
     public function temporaryUrl(string $location, DateTimeInterface $expiresAt, array $config = []): string

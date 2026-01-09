@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
             description: 'Идентификатор поста',
             in: 'path',
             required: true,
-            schema: new OA\Schema(type: 'integer')
+            schema: new OA\Schema(type: 'string', format: 'uuid')
         ),
     ],
     responses: [

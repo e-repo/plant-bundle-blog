@@ -23,6 +23,7 @@ services:
             PHP_IDE_CONFIG: "serverName=bb.local"
             S3_BUCKET: "blog-dev"
             S3_ENDPOINT: "http://minio:9000"
+            S3_PUBLIC_URL: "http://localhost:9000"
         volumes:
             - ./:/app
         depends_on:
